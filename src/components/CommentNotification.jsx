@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { onCreateComment } from '../graphql/subscriptions';
 
 function CommentNotification({ recipeId }) {
@@ -10,7 +10,7 @@ function CommentNotification({ recipeId }) {
       next: (data) => {
         const newComment = data.value.data.onCreateComment;
         alert(`New comment on your recipe "${newComment.recipeID}": ${newComment.content}`);
-        // Alternatively, update state or use a toast notification library
+        // Alternatively, use a toast notification library
       },
       error: (error) => console.warn(error),
     });

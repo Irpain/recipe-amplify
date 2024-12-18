@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Storage } from 'aws-amplify';
-import CommentSection from './CommentSection';
-import RatingComponent from './RatingComponent';
-import CommentNotification from './CommentNotification';
-import { Auth } from 'aws-amplify';
+import { Storage, Auth } from 'aws-amplify';
+import CommentSection from './CommentSection.jsx';
+import RatingComponent from './RatingComponent.jsx';
+import CommentNotification from './CommentNotification.jsx';
 
 function RecipeCard({ recipe }) {
   const { title, description, images, id, owner } = recipe;

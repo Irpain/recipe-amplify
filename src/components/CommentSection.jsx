@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { listComments } from '../graphql/queries';
 import { createComment } from '../graphql/mutations';
 
 function CommentSection({ recipeId }) {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState('');
+  const [user, setUser] = useState('');
 
   useEffect(() => {
     fetchComments();
+    fetchCurrentUser();
   }, [recipeId]);
 
   const fetchComments = async () => {
@@ -22,13 +24,25 @@ function CommentSection({ recipeId }) {
     }
   };
 
+  const fetchCurrentUser = async () => {
+    try {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      setUser(currentUser.username);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!content.trim()) return;
+
     const newComment = {
       content,
       recipeID: recipeId,
-      user: 'currentUser', // Replace with actual user identifier
+      user,
     };
+
     try {
       await API.graphql(graphqlOperation(createComment, { input: newComment }));
       setContent('');

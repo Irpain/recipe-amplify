@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import React, { useState, useEffect } from 'react';
+import { API, graphqlOperation, Storage, Auth } from 'aws-amplify';
 import { createRecipe } from '../graphql/mutations';
 
 function CreateRecipe() {
@@ -7,6 +7,20 @@ function CreateRecipe() {
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [image, setImage] = useState(null);
+  const [user, setUser] = useState('');
+
+  // Fetch current user on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await Auth.currentAuthenticatedUser();
+        setUser(currentUser.username);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -29,6 +43,7 @@ function CreateRecipe() {
       ingredients: ingredientsArray,
       instructions,
       images: image ? [image] : [],
+      owner: user, // Ensure your schema includes an 'owner' field
     };
     try {
       await API.graphql(graphqlOperation(createRecipe, { input: newRecipe }));

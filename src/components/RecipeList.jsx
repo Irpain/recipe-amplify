@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listRecipes } from '../graphql/queries';
-import RecipeCard from './RecipeCard';
-import CreateRecipe from './CreateRecipe';
-import SearchBar from './SearchBar';
+import RecipeCard from './RecipeCard.jsx';
+import CreateRecipe from './CreateRecipe.jsx';
+import SearchBar from './SearchBar.jsx';
 
 function RecipeList() {
   const [recipes, setRecipes] = useState([]);

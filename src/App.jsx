@@ -1,6 +1,6 @@
 import React from 'react';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
-import RecipeList from './components/RecipeList';
+import RecipeList from './components/RecipeList.jsx';
 
 function App() {
   return (
