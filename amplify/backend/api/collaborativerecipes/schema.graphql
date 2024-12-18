@@ -1,0 +1,29 @@
+type Recipe @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  ingredients: [String!]!
+  instructions: String!
+  images: [String]
+  videos: [String]
+  comments: [Comment] @connection(keyName: "byRecipe", fields: ["id"])
+  ratings: [Rating] @connection(keyName: "byRecipe", fields: ["id"])
+}
+
+type Comment @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) @key(name: "byRecipe", fields: ["recipeID"]) {
+  id: ID!
+  content: String!
+  recipeID: ID!
+  user: String!
+}
+
+type Rating @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) @key(name: "byRecipe", fields: ["recipeID"]) {
+  id: ID!
+  score: Int!
+  recipeID: ID!
+  user: String!
+}
+
+type Subscription {
+  onCreateComment(recipeID: ID!): Comment
+    @aws_subscribe(mutations: ["createComment"])
+}
